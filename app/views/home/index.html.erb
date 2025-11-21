@@ -1,0 +1,97 @@
+<!-- app/views/home/index.html.erb -->
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>HR Email Tool</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-start justify-center p-6">
+  <div class="w-full max-w-2xl bg-white rounded-lg shadow p-6">
+    <h1 class="text-2xl font-semibold mb-4">HR Email Response Tool</h1>
+
+    <form id="emailForm" action="/send_email" method="post" class="space-y-4">
+      <input type="hidden" name="authenticity_token" id="csrf" value="<%= form_authenticity_token %>">
+
+      <div>
+        <label class="block text-sm font-medium">Candidate Name</label>
+        <input name="candidate_name" id="candidate_name" class="mt-1 block w-full border rounded p-2" required>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium">Candidate Email</label>
+        <input type="email" name="candidate_email" id="candidate_email" class="mt-1 block w-full border rounded p-2" required>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium">Position</label>
+        <input name="position" id="position" class="mt-1 block w-full border rounded p-2" required>
+      </div>
+
+      <div>
+        <span class="block text-sm font-medium">Status</span>
+        <label class="inline-flex items-center mr-4">
+          <input type="radio" name="status" value="selected" checked class="mr-2"> Selected
+        </label>
+        <label class="inline-flex items-center">
+          <input type="radio" name="status" value="rejected" class="mr-2"> Rejected
+        </label>
+      </div>
+
+      <div class="flex gap-3">
+        <button type="button" id="previewBtn" class="px-4 py-2 bg-gray-100 rounded">Preview</button>
+        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Send Email</button>
+      </div>
+    </form>
+
+    <!-- simple alert area -->
+    <div id="message" class="mt-4"></div>
+
+    <!-- Preview modal (hidden initially) -->
+    <div id="previewModal" class="fixed inset-0 hidden items-center justify-center bg-black/40">
+      <div class="bg-white p-6 rounded w-11/12 max-w-xl">
+        <h3 class="font-semibold mb-2">Email Preview</h3>
+        <div id="previewContent" class="border p-4 rounded bg-gray-50 min-h-[80px]"></div>
+        <div class="mt-4 text-right">
+          <button id="closePreview" class="px-4 py-1 rounded border">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  // Basic client validation + preview
+  document.getElementById('previewBtn').addEventListener('click', () => {
+    const name = document.getElementById('candidate_name').value.trim();
+    const email = document.getElementById('candidate_email').value.trim();
+    const position = document.getElementById('position').value.trim();
+    const status = document.querySelector('input[name="status"]:checked').value;
+
+    if(!name || !email || !position) {
+      showMessage('Please fill name, email and position', 'red');
+      return;
+    }
+
+    const templateSelected = `Dear ${name},\n\nWe are pleased to inform you that you have been selected for the position of ${position}.\n\nPlease reply to this email to confirm your acceptance.\n\nBest regards,\nHR Team`;
+    const templateRejected = `Dear ${name},\n\nThank you for applying for the position of ${position}.\n\nWe regret to inform you that we have decided to move forward with other candidates.\n\nBest regards,\nHR Team`;
+
+    document.getElementById('previewContent').innerText = status === 'selected' ? templateSelected : templateRejected;
+    document.getElementById('previewModal').classList.remove('hidden');
+    document.getElementById('previewModal').classList.add('flex');
+  });
+
+  document.getElementById('closePreview').addEventListener('click', () => {
+    const modal = document.getElementById('previewModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  });
+
+  function showMessage(text, color='green') {
+    const container = document.getElementById('message');
+    container.innerHTML = `<div class="p-3 rounded-md text-white" style="background:${color === 'green' ? '#16a34a' : '#dc2626'}">${text}</div>`;
+    setTimeout(()=>container.innerHTML='',4000);
+  }
+  </script>
+</body>
+</html>
