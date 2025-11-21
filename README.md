@@ -1,24 +1,38 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+HR Candidate Email Response Tool
+A simple Rails-based web application that allows HR users to send email responses to job candidates based on their selection status. The tool provides a user-friendly form, predefined email templates, and email previews using Letter Opener.
 
-Things you may want to cover:
+🚀 Features
 
-* Ruby version
+Simple and clean UI for HR communication
 
-* System dependencies
+Form to enter:
 
-* Configuration
+Candidate Name
 
-* Database creation
+Candidate Email
 
-* Database initialization
+Position applied
 
-* How to run the test suite
+Status (Selected / Rejected)
 
-* Services (job queues, cache servers, search engines, etc.)
+Predefined email templates with placeholders
 
-* Deployment instructions
+Email preview using Letter Opener (opens in browser instead of actually sending)
 
-* ...
+Basic validation and error messages
+
+No database required
+
+Fully functional Rails mailer setup
+
+📦 Tech Stack
+
+Ruby on Rails
+
+HTML, CSS, JavaScript (Frontend)
+
+Rails ActionMailer (Backend email sending)
+
+Letter Opener gem (Email preview)
